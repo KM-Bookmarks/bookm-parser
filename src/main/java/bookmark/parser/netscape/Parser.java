@@ -26,17 +26,13 @@ public class Parser {
                     }
                     dtElement(elem.children());
                     break;
-                case "dl":
-                    dlElement(elem.children());
-                    break;
                 case "dd":
                     //System.out.println("# Descr: " + elem.html());
                     bookmark.description = elem.html();
                     break;
-                case "p":
-                    continue;
-                default:
-                    System.err.println("! No comprendo: " + elem.nodeName() + ": " + elem.html());
+                case "dl": dlElement(elem.children()); break;
+                case "p":  continue;
+                default:   System.err.println("! No comprendo: " + elem.nodeName() + ": " + elem.html());
             }
         }
         indent--;
@@ -57,13 +53,9 @@ public class Parser {
                     long dv = Long.parseLong(elem.attr("add_date")) / 1000;   // http://stackoverflow.com/questions/539900/google-bookmark-export-date-format
                     bookmark.date = format.format(new Date(dv));
                     break;
-                case "dl":
-                    dlElement(elem.children());
-                    break;
-                case "p":
-                    continue;
-                default:
-                    System.err.println("! No comprendo: " + elem.html());
+                case "dl": dlElement(elem.children());  break;
+                case "p":  continue;
+                default:   System.err.println("! No comprendo: " + elem.html());
             }
         }
         indent--;
