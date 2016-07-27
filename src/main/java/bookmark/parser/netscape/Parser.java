@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
 import java.util.Date;
+import java.util.Deque;
 
 /**
  * Horrible, would have been better to use a Stream parser, the Netscape format is barely HTML.
@@ -19,6 +21,7 @@ public class Parser {
     int indent = 0;
     Bookmark bookmark = new Bookmark();
     private Element first;
+    private Deque<String> currentTag = new ArrayDeque<String>(20);
 
 
     public Parser(File theDoc) throws IOException {
@@ -37,7 +40,8 @@ public class Parser {
                 case "dt":
                     if (bookmark.URL != null) {
                         System.out.println(bookmark.toString());
-                        bookmark.URL = null;
+                        bookmark = new Bookmark();
+                        bookmark.tag = String.join(":", currentTag );
                     }
                     dtElement(elem.children());
                     break;
@@ -50,22 +54,23 @@ public class Parser {
                 default:   System.err.println("! No comprendo: " + elem.nodeName() + ": " + elem.html());
             }
         }
-        indent--;
+        if (--indent > 0)  currentTag.removeLast() ;
     }
 
     private void dtElement(Elements elems) {
-        indent++;
         for (Element elem : elems) {
             switch (elem.nodeName()) {
                 case "h3":
                     //System.out.println("# Tag: " + elem.ownText());
-                    bookmark.tag = elem.ownText();
+                    currentTag.addLast(elem.ownText());
+                    bookmark.tag = String.join(":", currentTag);
                     break;
                 case "a":
                     //System.out.println("# "+ indent + " Link: " + elem.html());
                     bookmark.name = elem.html();
                     bookmark.URL = elem.attr("href");
-                    long dv = Long.parseLong(elem.attr("add_date")) / 1000;   // http://stackoverflow.com/questions/539900/google-bookmark-export-date-format
+                    long dv = Long.parseLong(elem.attr("add_date"));   // http://stackoverflow.com/questions/539900/google-bookmark-export-date-format
+                    if (dv > 10000000000l)  dv = dv / 1000;
                     bookmark.date = format.format(new Date(dv));
                     break;
                 case "dl": dlElement(elem.children());  break;
@@ -73,6 +78,5 @@ public class Parser {
                 default:   System.err.println("! No comprendo: " + elem.html());
             }
         }
-        indent--;
     }
 }
