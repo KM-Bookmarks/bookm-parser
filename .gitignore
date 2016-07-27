@@ -12,7 +12,7 @@
 hs_err_pid*
 
 .idea/
-Bookmarks-Chrome_2016-07-25.html
-Bookmarks-Google_2016-07-25.html
+*.html
+*.csv
 log.txt
 target/

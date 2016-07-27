@@ -3,10 +3,6 @@ package bookmark.parser.netscape;
 import java.io.File;
 import java.io.IOException;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * Will parse a Netscape formated bookmark file and export a CSV file
@@ -17,10 +13,14 @@ import org.jsoup.select.Elements;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Document doc = Jsoup.parse(new File("Bookmarks-Google_2016-07-25.html"), "UTF-8");
-        Element first = doc.select("DL").first();
-        Elements dls = first.children();
-        (new Parser()).dlElement(dls);
+
+        // Argument
+        String fileName = "Bookmarks-Google_2016-07-25.html";
+        if (args.length > 0) {
+            fileName = args[0];
+        }
+
+        (new Parser(new File(fileName))).parse();
     }
 
 }
