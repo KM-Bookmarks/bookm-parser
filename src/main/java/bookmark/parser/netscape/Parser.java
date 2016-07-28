@@ -70,7 +70,7 @@ public class Parser {
                     bookmark.name = elem.html();
                     bookmark.URL = elem.attr("href");
                     long dv = Long.parseLong(elem.attr("add_date"));   // http://stackoverflow.com/questions/539900/google-bookmark-export-date-format
-                    if (dv > 10000000000l)  dv = dv / 1000;
+                    if (dv > 10000000000l) {  dv = dv / 1000l; } else { dv = dv * 1000l;  };
                     bookmark.date = format.format(new Date(dv));
                     break;
                 case "dl": dlElement(elem.children());  break;
