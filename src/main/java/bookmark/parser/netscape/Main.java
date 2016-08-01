@@ -6,7 +6,6 @@ import java.io.IOException;
 
 /**
  * Will parse a Netscape formated bookmark file and export a CSV file
- * TODO: filename as argument
  * TODO: write a file CSV with same name
  * WARNING: does not output the last bookmark!
  */
